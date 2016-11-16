@@ -23,6 +23,9 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     ifstream infile(in_filename);
 
     bool have_header = false;
+
+    unordered_map<string, Vertex*> actor_List;
+    unordered_map<string, Movie*> movie_List;
   
     // keep reading lines until the end of file is reached
     while (infile) {
@@ -56,10 +59,43 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 
         string actor_name(record[0]);
         string movie_title(record[1]);
-        int movie_year = stoi(record[2]);
+        string movie_year(record[2]);
     
         // we have an actor/movie relationship, now what?
+        
+        string actor_key = actor_name;
+        string movie_key = movie_title + movie_year;
+        unordered_map<string, Vertex*>::const_iterator actor = actor_List.find(actor_key);
+        unordered_map<string, Movie*>::const_iterator elem_movie = movie_List.find(movie_key);
+        Movie* movie;
+        Vertex* vertex_actor;
+
+        if(actor == actor_List.end()) {
+            vertex_actor = createVertex(actor_name);            
+        } else {
+            vertex_actor = actor->second;
+        }
+
+        if (elem_movie == movie_List.end()) {
+            movie = new Movie(movie_title, movie_year);
+            movie->actors.push_back(vertex_actor);
+            movie_list.insert(movie_key, movie);
+        } else {
+            movie = elem_movie->second;
+            movie->actors.push_back(vertex_actor);            
+        }
+
+
+        vector_actor->movies.push_back(movie);
+
+        if(actor == actor_List.end()){
+            actor_list.insert(actor_key, vertex_actor);
+        }
+
+
     }
+
+    createGraph(actor_List, movie_List);
 
     if (!infile.eof()) {
         cerr << "Failed to read " << in_filename << "!\n";
@@ -68,4 +104,23 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     infile.close();
 
     return true;
+}
+
+void createGraph(unordered_map<string, Vertex*>& actor_List, unordered_map<string, Movie*>& movie_List) {
+    auto actor_it = actor_List.begin();
+
+    for(; actor_it != actor_List.end(); ++actor_it) {
+        Vertex * actor = actor_it->second;
+        int actor_index = actor->index;
+        auto movie_list = actor->movies;
+        int i = 0;
+        for(; i < movie_list.size(); i++) {
+            for(int j = 0; j < movie_list[i].size(); j++) {
+               int curr_index = movie_list[i][j].index;
+               if (curr_index != actor_index && actor->adj.find(curr_index) != actor->adj->end()) {
+                   actor->adj.push_back(curr_index);
+               }
+            }
+        }
+     } 
 }
