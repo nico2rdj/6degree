@@ -1,3 +1,6 @@
+#ifndef ACTORNODE_H
+#define ACTORNODE_H
+
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -5,32 +8,33 @@
 
 using namespace std;
 
+class Movie;
+
 struct Vertex
 {
-    vector<int> adj;
+    vector<Vertex*> adj;
     int dist;
     int index;
-    int prev;
+    Vertex* prev;
+    Movie* prev_edge;
     string actor;
     vector<Movie*> movies;
+    vector<Movie*> edges; // tout les films de l'acteur
+    vector<Movie*> path;
+
 };
 
-int counter = 0;
-
-Vertex* createVertex(string actor){
-    Vertex* node = (Vertex*)malloc(sizeof(Vertex));
-    node->index = counter++;
-    node->actor = actor;
-    return node;
-}
+Vertex* createVertex(string actor);
 
 class Movie {
 public:
   string title;
-  int year;
+  string year;
   vector <Vertex*> actors;
-  Movie(string title, unsigned int year){
+  Movie(string& title, string& year){
      this->title = title;
      this->year = year;
   }
 };
+
+#endif // ACTORNODE_H
