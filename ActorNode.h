@@ -25,6 +25,7 @@ struct Vertex
 };
 
 Vertex* createVertex(string actor);
+Vertex* createVertex(Vertex* node);
 
 class Movie {
 public:

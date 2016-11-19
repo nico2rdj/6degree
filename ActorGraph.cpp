@@ -37,7 +37,7 @@ int main(int argc, char ** argv) {
 
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, char ** argv) {
     // Initialize the file stream
-    cout << in_filename << endl;
+    //cout << in_filename << endl;
     ifstream infile(in_filename);
     
     bool have_header = false;
@@ -129,7 +129,6 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, 
     
     /// taking actors in the pair file
     ifstream infile_actor(argv[3]);
-    cout << argv[3] << endl;
 
     have_header = false;
 
@@ -154,7 +153,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, 
       
             // get the next string before hitting a tab character and put it in 'next'
             if (!getline( ss, next, '\t' )) break;
-    
+
             record.push_back( next );
         }
     
@@ -166,33 +165,21 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, 
         string actor_name1(record[0]);
         string actor_name2(record[1]);
         
-        cout << "name1" << actor_name1 << endl;
-        cout << "name2" << actor_name2 << endl;
 
 
 
         auto actor = actor_List.find(actor_name1)->second;
         auto actortwo = actor_List.find(actor_name2)->second;
-       //cout << actor->actor;
     
         Vertex * result = BFS(actor, actortwo, argv[4]);
-
-
-        if (result) {
-            cout << "true\n";    
-        } else {
-            cout << "false\n";    
-        }
-
-    
-
     }
     
     return true;
 
 }
 
-void createGraph(unordered_map<string, Vertex*>& actor_List, unordered_map<string, Movie*>& movie_List) {
+void createGraph(unordered_map<string, Vertex*>& actor_List, unordered_map<string, Movie*>& movie_List){
+    
     auto actor_it = actor_List.begin();
 
     for(; actor_it != actor_List.end(); ++actor_it) {
