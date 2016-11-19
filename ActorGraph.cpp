@@ -132,7 +132,11 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, 
 
     have_header = false;
 
-      
+    ofstream myFile;
+    myFile.open(argv[4], std::ios_base::app);
+    myFile << "(actor)--[movie#@year]-->(actor)--...\n";
+    myFile.close();
+
     // keep reading lines until the end of file is reached
     while (infile_actor) {
         string s;
