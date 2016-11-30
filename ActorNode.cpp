@@ -12,6 +12,7 @@ Vertex* createVertex(string actor){
     
     node->actor = actor;
     node->dist = INT_MAX;
+    node->done = 0;
     
     return node;
 }
@@ -29,8 +30,7 @@ Vertex* createVertex(Vertex* node){
     new_node->movies = node->movies;
     new_node->adj = node->adj;
     new_node->edges = node->edges;
-
-  
+    new_node->weight = node->weight;
     
     return new_node;
 }

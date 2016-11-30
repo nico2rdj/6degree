@@ -11,6 +11,16 @@
 #define ACTORGRAPH_H
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+#include "ActorGraph.h"
+#include "ActorNode.h"
+#include "pathfinder.h"
+
 
 // Maybe include some data structures here
 
@@ -35,8 +45,12 @@ public:
      *
      * return true if file was loaded sucessfully, false otherwise
      */
-    bool loadFromFile(const char* in_filename, bool use_weighted_edges, char** argv);
-  
+     bool loadFromFile(const char* in_filename, bool use_weighted_edges, char ** argv, unordered_map<string, Vertex*> &actor_List, unordered_map<string, Movie*> &movie_List);
+
+     bool reading_Actors(char ** argv,  unordered_map<string, Vertex*> actor_List);
+
+
+ 
 };
 
 

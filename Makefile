@@ -14,13 +14,13 @@ else
     LDFLAGS += -g
 endif
 
-all: pathfinder
+all: pathfinder actorconnections
 
-
+actorconnections: ActorGraph.o pathfinder.o ActorNode.o
 
 # include what ever source code *.h files pathfinder relies on (these are merely the ones that were used in the solution)
 
-pathfinder: ActorGraph.o ActorNode.o
+pathfinder: pathfinder_main.o ActorGraph.o ActorNode.o
 
 
 
@@ -31,6 +31,8 @@ pathfinder: ActorGraph.o ActorNode.o
 ActorNode.o: ActorNode.h
 
 ActorGraph.o: ActorNode.h ActorGraph.h pathfinder.h
+
+pathfinder_main.o: ActorNode.h ActorGraph.h pathfinder.h pathfinder_main.cpp
 
 
 clean:
