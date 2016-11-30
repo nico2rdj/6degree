@@ -27,26 +27,15 @@
 using namespace std;
 
 class ActorGraph {
-protected:
-  
-    // Maybe add class data structure(s) here
+
 
 public:
     ActorGraph(void);
+    
+    //load the movies and actors from the file and create our actorList and movie_List
+    bool loadFromFile(const char* in_filename, bool use_weighted_edges, char ** argv, unordered_map<string, Vertex*> &actor_List, unordered_map<string, Movie*> &movie_List);
 
-    // Maybe add some more methods here
-  
-    /** You can modify this method definition as you wish
-     *
-     * Load the graph from a tab-delimited file of actor->movie relationships.
-     *
-     * in_filename - input filename
-     * use_weighted_edges - if true, compute edge weights as 1 + (2015 - movie_year), otherwise all edge weights will be 1
-     *
-     * return true if file was loaded sucessfully, false otherwise
-     */
-     bool loadFromFile(const char* in_filename, bool use_weighted_edges, char ** argv, unordered_map<string, Vertex*> &actor_List, unordered_map<string, Movie*> &movie_List);
-
+    //we read the actors in the file and depending on weighted or unweighted we find the connections between the two actors
      bool reading_Actors(char ** argv,  unordered_map<string, Vertex*> actor_List);
 
 

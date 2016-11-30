@@ -16,12 +16,11 @@ endif
 
 all: pathfinder actorconnections
 
-actorconnections: ActorGraph.o pathfinder.o ActorNode.o
+actorconnections: UnionFind.o ActorGraph.o pathfinder.o ActorNode.o
 
 # include what ever source code *.h files pathfinder relies on (these are merely the ones that were used in the solution)
 
 pathfinder: pathfinder_main.o ActorGraph.o ActorNode.o
-
 
 
 # include what ever source code *.h files ActorGraph relies on (these are merely the ones that were used in the solution)
@@ -34,6 +33,7 @@ ActorGraph.o: ActorNode.h ActorGraph.h pathfinder.h
 
 pathfinder_main.o: ActorNode.h ActorGraph.h pathfinder.h pathfinder_main.cpp
 
+UnionFind.o: UnionFind.h
 
 clean:
 	rm -f pathfinder *.o core*

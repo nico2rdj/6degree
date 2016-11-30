@@ -17,7 +17,7 @@ bool reading_Actors(char ** argv,  unordered_map<string, Vertex*> actor_List);
 
 int main(int argc, char ** argv) {
     
-    if (argc != 5) { //./pathfinder movie_casts.tsv u test_pairs.tsv out_paths_unweighted.tsv
+    if (argc != 5) {
         return 1;
     }
     ActorGraph graph;
@@ -28,13 +28,23 @@ int main(int argc, char ** argv) {
     createGraph(actor_List, movie_List);
     graph.reading_Actors(argv, actor_List);
 
-   
+    auto movie_it = movie_List.begin();
+
+    for(;movie_it != movie_List.end(); ++movie_it) {     
+        delete movie_it->second;
+    }
+    auto actor_it = actor_List.begin();
+
+    for(;actor_it != actor_List.end(); ++actor_it) {     
+        delete actor_it->second;
+    }
+ 
 
 
     return 0;    
 }
 
-
+//we read the actors in the file and depending on weighted or unweighted we find the connections between the two actors
 bool ActorGraph::reading_Actors(char ** argv, unordered_map<string, Vertex*> actor_List ){ 
     
     bool have_header = false;
@@ -89,7 +99,7 @@ bool ActorGraph::reading_Actors(char ** argv, unordered_map<string, Vertex*> act
         }
 
         auto actor_it = actor_List.begin();
-
+        // reset graph
         for(; actor_it != actor_List.end(); ++actor_it) {
             Vertex * curr_actor = actor_it->second;
             curr_actor->dist = INT_MAX;
@@ -102,6 +112,8 @@ bool ActorGraph::reading_Actors(char ** argv, unordered_map<string, Vertex*> act
 
 }
 
+
+// Create the graph of actors with their movies
 void createGraph(unordered_map<string, Vertex*>& actor_List, unordered_map<string, Movie*>& movie_List){
     
     auto actor_it = actor_List.begin();

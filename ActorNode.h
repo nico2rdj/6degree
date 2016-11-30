@@ -20,8 +20,7 @@ struct Vertex
     Movie* prev_edge;
     string actor;
     vector<Movie*> movies;
-    vector<Movie*> edges; // tout les films de l'acteur
-    //vector<Movie*> path;
+    vector<Movie*> edges; 
     int weight = 1;
     
 };
@@ -49,6 +48,8 @@ public:
      this->year = year;
      weight = (2015 - stoi(year)) + 1;
   }
+
+  ~Movie(){}
 };
 
 class MovieComparator{

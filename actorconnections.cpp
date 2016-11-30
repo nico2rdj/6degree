@@ -6,8 +6,10 @@
 #include "ActorNode.h"
 #include <stdio.h>
 #include <limits.h>
+#include "UnionFind.h"
 
 using namespace std;
+void unionFind(vector<actorPair*>& pairs, priority_queue<Movie*, vector<Movie*>, MovieComparator> pq, unordered_map<string, Vertex*>* actor_List);
 
 //display the year where the two actors became first connected 
 string display_connection_year(Vertex * actor, Vertex * actor_connect, string year){
@@ -39,7 +41,19 @@ int main(int argc, char ** argv){
         pq.push(movie_it->second);
     }
 
-    findConnections(argv, actor_List, pq);    
+    findConnections(argv, actor_List, pq);
+
+    movie_it = movie_List.begin();
+
+    for(;movie_it != movie_List.end(); ++movie_it) {     
+        delete movie_it->second;
+    }
+    auto actor_it = actor_List.begin();
+
+    for(;actor_it != actor_List.end(); ++actor_it) {     
+        delete actor_it->second;
+    }
+
     
 }
 
@@ -53,7 +67,7 @@ bool findConnections(char ** argv, unordered_map<string, Vertex*> actor_List, pr
     myFile << "Actor1	Actor2	Year\n";
     myFile.close();
 
-
+    vector<actorPair*> unionFindPairs;
     while (infile_actor) {
         string s;
         if (!getline( infile_actor, s )) break;
@@ -143,20 +157,32 @@ bool findConnections(char ** argv, unordered_map<string, Vertex*> actor_List, pr
             }
 
         } else if(strcmp(argv[4], "ufind") == 0) {
-            auto actor_it = actor_List.begin();
+           actorPair* pair = new actorPair();
+           pair->actor1 = actor_name1;
+           pair->actor2 = actor_name2;
+           pair->year = "9999";
 
-            for(; actor_it != actor_List.end(); ++actor_it) {
-                Vertex * curr_actor = actor_it->second;
-                curr_actor->dist = INT_MAX;
-                curr_actor->prev = 0;
-                curr_actor->done = false;
-            }
-
-            Vertex * result = dijkstra(actor, actortwo, argv[4]);
+           unionFindPairs.push_back(pair);
         }
 
         pq = tmp;
     }
+
+    if(strcmp(argv[4], "ufind") == 0) {
+        unionFind(unionFindPairs, pq, &actor_List);
+    }
+    
+    int i = 0;
+    myFile.open(argv[3], std::ios_base::app);
+    auto pairs = unionFindPairs;
+
+    for(; i < pairs.size(); i++) {
+            string connection = pairs[i]->actor1 + "	" + pairs[i]->actor2 + "	" + pairs[i]->year; 
+        myFile << connection << endl;
+        delete pairs[i];
+    }
+    
+    myFile.close();
     
     return true;
 
@@ -181,4 +207,47 @@ void addConnections(vector<Movie*>& movies) {
         }
 
     }
+}
+
+void unionFind(vector<actorPair*>& pairs, priority_queue<Movie*, vector<Movie*>, MovieComparator> pq, unordered_map<string, Vertex*>* actor_List) {
+
+    UnionFind uf(actor_List);
+    int foundAllPairs = 0;    
+    while(!pq.empty()) {
+       vector <Movie *> movies;
+       string year = "";
+       do {
+            Movie* movie = pq.top();
+            pq.pop();
+            year = movie->year;
+            movies.push_back(movie);
+       } while(!pq.empty() && pq.top()->year == year);
+
+        int i = 0;
+        for (; i < movies.size(); i++) {
+            int j = 0;
+            for(; j < movies[i]->actors.size(); j++) {
+                int k = j + 1;
+                for (; k < movies[i]->actors.size(); k++) {
+                    uf.merge(movies[i]->actors[j]->actor, movies[i]->actors[k]->actor);
+                }    
+            }
+
+        }
+        
+        i = 0;
+        for(; i < pairs.size(); i++) {
+            if (uf.find(pairs[i]->actor1) == uf.find(pairs[i]->actor2)) {
+                if(pairs[i]->year == "9999") {
+                    foundAllPairs++;
+                    pairs[i]->year = year;
+                }
+            }  
+        }
+
+        if (foundAllPairs == pairs.size()) {
+            return;
+        }
+    }
+    
 }

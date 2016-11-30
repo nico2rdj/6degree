@@ -1,7 +1,7 @@
 /*
  * ActorGraph.cpp
- * Author: <YOUR NAME HERE>
- * Date:   <DATE HERE>
+ * Author: <Nicolas Martin Matthew Sparrow>
+ * Date:   <11/02/2016>
  *
  * This file is meant to exist as a container for starter code that you can use to read the input file format
  * defined in movie_casts.tsv. Feel free to modify any/all aspects as you wish.
@@ -23,29 +23,8 @@
 using namespace std;
 
 ActorGraph::ActorGraph(void) {}
-/*void createGraph(unordered_map<string, Vertex*>& actor_List, unordered_map<string, Movie*>& movie_List);
-bool reading_Actors(char ** argv,  unordered_map<string, Vertex*> actor_List);
 
-
-int main(int argc, char ** argv) {
-    
-    if (argc != 5) { //./pathfinder movie_casts.tsv u test_pairs.tsv out_paths_unweighted.tsv
-        return 1;
-    }
-    ActorGraph graph;
-    unordered_map<string, Vertex*> actor_List;
-    unordered_map<string, Movie*> movie_List;
-
-    graph.loadFromFile(argv[1], false, argv, actor_List, movie_List);
-    createGraph(actor_List, movie_List);
-    graph.reading_Actors(argv, actor_List);
-
-   
-
-
-    return 0;    
-}*/
-
+//load the data from the file and create our actorList and movie_List
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, char ** argv, unordered_map<string, Vertex*> &actor_List, unordered_map<string, Movie*> &movie_List)
 {
     // Initialize the file stream
@@ -89,7 +68,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges, 
         string movie_title(record[1]);
         string movie_year(record[2]);
     
-        // we have an actor/movie relationship, now what?
+        
 
         string actor_key = actor_name;
         string movie_key = movie_title + movie_year;
